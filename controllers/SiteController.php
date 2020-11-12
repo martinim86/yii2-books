@@ -10,6 +10,8 @@ use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\ContactForm;
 use app\models\SignupForm;
+use app\models\UploadForm;
+use yii\web\UploadedFile;
 use app\models\User;
 
 class SiteController extends Controller
@@ -108,6 +110,7 @@ class SiteController extends Controller
     public function actionContact()
     {
         $model = new ContactForm();
+         
         if ($model->load(Yii::$app->request->post())  && $model->contact(Yii::$app->params['adminEmail']) && $model->save()  ) {
 
             Yii::$app->session->setFlash('contactFormSubmitted');
@@ -130,7 +133,22 @@ class SiteController extends Controller
      */
     public function actionAbout()
     {
-        return $this->render('about');
+        $decoder = new UploadForm();
+        if (Yii::$app->request->isPost) {
+            $model->file = UploadedFile::getInstance($decoder, 'file');
+            echo '<pre>'; print_r($model->file);
+            die;
+
+            if ($decoder->file && $decoder->validate()) {                
+               $decoder->file->saveAs('uploads/' . $decoder->file->baseName . '.' . $decoder->file->extension);
+            }
+        }
+
+
+
+        return $this->render('about', [
+            'decoder' => $decoder,
+        ]);
     }
 
     /**

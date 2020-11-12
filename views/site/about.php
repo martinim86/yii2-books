@@ -1,7 +1,7 @@
 <?php
 
 /* @var $this yii\web\View */
-
+use yii\widgets\ActiveForm;
 use yii\helpers\Html;
 
 $this->title = 'About';
@@ -16,3 +16,10 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <code><?= __FILE__ ?></code>
 </div>
+<?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]) ?>
+
+<?= $form->field($decoder, 'file')->fileInput() ?>
+
+<button>Отправить</button>
+
+<?php ActiveForm::end() ?>
